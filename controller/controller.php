@@ -25,6 +25,12 @@ class Controller
 
     }
 
+    public function Panel(){
+
+        require("view/panel.php");
+
+    }
+
     public function Guardar(){
         $usuario = new Usuario();
         

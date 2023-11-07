@@ -8,7 +8,6 @@ class Usuario
     public $email;
     public $pass;
 
-
 	public function __CONSTRUCT()
 	{
 		try
@@ -21,6 +20,29 @@ class Usuario
 		}
 	}
 
+	public function Login($email, $pass) {
+		try {
+			$stmt = $this->pdo->prepare("SELECT * FROM usuarios WHERE email = :email AND contrasena = :pass");
+			$stmt->bindParam(":email", $email, PDO::PARAM_STR);
+			$stmt->bindParam(":pass", $pass, PDO::PARAM_STR);
+			$stmt->execute();
+			$user = $stmt->fetch(PDO::FETCH_ASSOC);
+	
+			if ($user) {
+				// Usuario y contraseña coinciden.
+				// Puedes almacenar información del usuario en la sesión si es necesario.
+				$_SESSION['id'] = $user['id'];
+				return true;
+			} else {
+				$this->msg = "Usuario o contraseña incorrectos.";
+				return false;
+			}
+		} catch (Exception $e) {
+			die($e->getMessage());
+		}
+	}
+	
+	
 
 	public function Registrar(usuario $data)
 	{

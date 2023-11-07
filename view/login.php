@@ -1,6 +1,6 @@
-<!doctype html>
+<!DOCTYPE html>
 <html lang="en">
-  <head>
+<head>
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1">
     <meta name="description" content="">
@@ -9,52 +9,57 @@
     <title>Login</title>
 
     <link rel="canonical" href="https://getbootstrap.com/docs/5.2/examples/sign-in/">
+    <link href="public/css/bootstrap.min.css" rel="stylesheet">
 
-
-<link href="public/css/bootstrap.min.css" rel="stylesheet">
-
-
-
-    
     <!-- Custom styles for this template -->
     <link href="public/css/signin.css" rel="stylesheet">
-  </head>
-  <body class="text-center">
-    
-<main class="form-signin w-100 m-auto">
-<form name="formulario" class="form-signin" method="POST" action="./?op=ingresar" >
-    <img class="mb-4" src="public/images/utp.svg" alt="" width="125" height="125">
-    <h1 class="h3 mb-3 fw-normal">Acceder al sistema</h1>
+</head>
+<body class="text-center">
+    <main class="form-signin w-100 m-auto">
+        <form class="formulario" method="post">
+            <h1 class="h3 mb-3 fw-normal">Acceder al sistema</h1>
+            <label for="email">Email</label>
+            <input type="text" id="email" name="email" required>
+            <label for="pass">Contraseña</label>
+            <input type="password" id="pass" name="pass" required>
+            <input class="login-btn" type="submit" value="Iniciar Sesión">
 
-    <div class="form-floating">
-      <input type="email" class="form-control" id="floatingInput" placeholder="name@example.com" required>
-      <label for="floatingInput">Email address</label>
-    </div>
-    <div class="form-floating">
-      <input type="password" class="form-control" id="floatingPassword" placeholder="Password" required>
-      <label for="floatingPassword">Password</label>
-    </div>
+            <div class="mt-4">
+                <div class="d-flex justify-content-center links">
+                    ¿Aún no tiene cuenta? - <a href="?op=crear" class="ml-2"> Regístrese aquí </a>
+                </div>
+                <div class="d-flex justify-content-center links">
+                    <a href="#">¿Olvidó su contraseña?</a>
+                </div>
+            </div>
 
-    <div class="checkbox mb-3">
-      <label>
-        <input type="checkbox" value="remember-me"> Recordar Usuario 
-      </label>
-    </div>
-    <button class="w-100 btn btn-lg btn-primary" type="submit">Entrar</button>
+            <p class="mt-5 mb-3 text-muted">&copy; 2017–2022</p>
+        </form>
+        <?php
+        session_start();
 
-    <div class="mt-4">
-    <div class="d-flex justify-content-center links">
-      ¿Aún no tiene cuenta? - <a href="?op=crear" class="ml-2"> Regístrese aquí </a>
-    </div>
-    <div class="d-flex justify-content-center links">
-      <a href="#">¿Olvido su contraseña?</a>
-    </div>
+        if (isset($_SESSION["id"])) {
+            header("Location: panel.php");
+            exit();
+        }
 
-    <p class="mt-5 mb-3 text-muted">&copy; 2017–2022</p>
-  </form>
-</main>
+        if ($_SERVER["REQUEST_METHOD"] == "POST") {
+            $email = $_POST["email"];
+            $pass = $_POST["pass"];
 
+            require_once('model/usuario.php'); // Incluye la nueva clase
 
-    
-  </body>
+            $auth = new usuario();
+
+            if ($auth->Login($email, $pass)) {
+                $_SESSION["email"] = $email;
+                header("Location: view/panel.php");
+                exit();
+            } else {
+                echo "Usuario o contraseña incorrectos. Inténtalo de nuevo.";
+            }
+        }
+        ?>
+    </main>
+</body>
 </html>
