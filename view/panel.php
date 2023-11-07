@@ -1,6 +1,6 @@
 <?php 
 if (isset($_SESSION["id"])) {
-    header("Location: panel.php");
+    header("Location: login.php");
     exit();
 }
 ?>
